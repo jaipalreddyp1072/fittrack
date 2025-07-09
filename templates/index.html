@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FitTrack</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="dashboard-container">
+    <main class="dashboard-main">
+      <header class="dashboard-header">
+        <h1>Welcome to FitTrack</h1>
+        {% if session.get('logged_in') %}
+          <p>Hello, {{ session.get('user_name') }}!</p>
+          <a href="/logout" class="btn">Logout</a>
+        {% else %}
+          <p>Please log in or sign up to get started.</p>
+          <a href="/login" class="btn">Login</a>
+          <a href="/signup" class="btn">Sign Up</a>
+        {% endif %}
+      </header>
+    </main>
+  </div>
+</body>
+</html>
+

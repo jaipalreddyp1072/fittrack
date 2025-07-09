@@ -1,0 +1,56 @@
+<h2>Calculate Body Fat %</h2>
+<div class="form-header" style="display: flex; justify-content: space-between; align-items: center;">
+  <button id="editFatBtn">Edit</button>
+</div>
+
+<form id="fatForm">
+  <input type="number" name="age" placeholder="Age" required disabled>
+  <input type="number" name="weight" placeholder="Weight (kg)" required disabled>
+  <input type="number" name="height" placeholder="Height (cm)" required disabled>
+
+  <details>
+    <summary>Measurements</summary>
+    <input type="number" name="chest" placeholder="Chest (cm)" disabled>
+    <input type="number" name="biceps" placeholder="Biceps (cm)" disabled>
+    <input type="number" name="thighs" placeholder="Thighs (cm)" disabled>
+    <input type="number" name="waist" placeholder="Waist (cm)" disabled>
+    <input type="number" name="hips" placeholder="Hips (cm)" disabled>
+    <input type="number" name="calf" placeholder="Calf (cm)" disabled>
+    <input type="number" name="neck" placeholder="Neck (cm)" disabled>
+  </details>
+
+  <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+    <button id="saveFatBtn" type="submit">Save</button>
+  </div>
+</form>
+
+<div id="fatResult"></div>
+
+<script>
+  const fatForm = document.getElementById("fatForm");
+  const editFatBtn = document.getElementById("editFatBtn");
+  const inputs = fatForm.querySelectorAll("input");
+
+  editFatBtn.onclick = () => {
+    inputs.forEach(i => i.disabled = false);
+  };
+
+  fatForm.onsubmit = async function(e) {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(fatForm).entries());
+
+    const res = await fetch('/calculate/fat', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    });
+
+    const result = await res.json();
+    document.getElementById("fatResult").innerText = result.fat
+      ? `Body Fat %: ${result.fat}`
+      : result.error;
+
+    inputs.forEach(i => i.disabled = true);
+  };
+</script>
+

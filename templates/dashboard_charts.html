@@ -1,0 +1,43 @@
+<h2>Your Health Summary</h2>
+
+<canvas id="fatChart" height="100"></canvas>
+<canvas id="calorieChart" height="100" style="margin-top: 30px;"></canvas>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  async function loadSummaryData() {
+    const res = await fetch('/dashboard/summary');
+    const data = await res.json();
+
+    const fatCtx = document.getElementById('fatChart').getContext('2d');
+    new Chart(fatCtx, {
+      type: 'line',
+      data: {
+        labels: data.fat.labels,
+        datasets: [{
+          label: 'Body Fat %',
+          data: data.fat.values,
+          borderColor: 'rgba(255, 99, 132, 1)',
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { position: 'top' } }
+      }
+    });
+
+    const calCtx = document.getElementById('calorieChart').getContext('2d');
+    new Chart(calCtx, {
+      type: 'bar',
+      data: {
+        labels: data.calories.labels,
+        datasets: [{
+          label: 'Calories Burned',
+          data: data.calories.values,
+          backgroundColor: 'rgba(54, 1
+

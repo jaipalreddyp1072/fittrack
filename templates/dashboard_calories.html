@@ -1,0 +1,47 @@
+<h2>Calories & Speed</h2>
+<div class="form-header" style="display: flex; justify-content: space-between; align-items: center;">
+  <button id="editCalBtn">Edit</button>
+</div>
+<form id="calForm">
+  <select name="day" disabled>
+    <option value="Monday">Monday</option>
+    <option value="Tuesday">Tuesday</option>
+    <option value="Wednesday">Wednesday</option>
+    <option value="Thursday">Thursday</option>
+    <option value="Friday">Friday</option>
+    <option value="Saturday">Saturday</option>
+    <option value="Sunday">Sunday</option>
+  </select>
+  <input type="number" name="steps" placeholder="Steps Walked" required disabled>
+  <input type="number" name="time" placeholder="Time (minutes)" required disabled>
+  <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+    <button id="saveCalBtn" type="submit">Save</button>
+  </div>
+</form>
+<div id="calResult"></div>
+
+<script>
+  const calForm = document.getElementById("calForm");
+  const editCalBtn = document.getElementById("editCalBtn");
+  const calInputs = calForm.querySelectorAll("input, select");
+
+  editCalBtn.onclick = () => {
+    calInputs.forEach(i => i.disabled = false);
+  };
+
+  document.getElementById("saveCalBtn").addEventListener("click", async function(e) {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(calForm).entries());
+    const res = await fetch('/calculate/calories', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    document.getElementById("calResult").innerText = result.calories
+      ? `Calories: ${result.calories}, Speed: ${result.speed} steps/min`
+      : result.error;
+    calInputs.forEach(i => i.disabled = true);
+  });
+</script>
+

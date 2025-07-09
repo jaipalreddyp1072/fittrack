@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FitTrack Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="dashboard-container">
+    <nav class="sidebar">
+      <h2>FitTrack</h2>
+      <ul>
+        <li><a href="#" onclick="loadPage('fat')">Fat %</a></li>
+        <li><a href="#" onclick="loadPage('calories')">Calories</a></li>
+        <li><a href="#" onclick="loadPage('health')">Health Parameters</a></li>
+        <li><a href="#" onclick="loadPage('charts')">Summary</a></li>
+      </ul>
+    </nav>
+
+    <main class="dashboard-main">
+      <header class="dashboard-header">
+        <div class="profile-widget">
+          <span class="user-name">{{ session.get('user_name', 'User') }}</span>
+          <img src="{{ url_for('static', filename='avatar.png') }}" alt="Profile Avatar" class="profile-avatar">
+          <div class="profile-menu">
+            <a href="/logout">Logout</a>
+            <a href="/profile">View Profile</a>
+          </div>
+        </div>
+      </header>
+
+      <div id="content">Select a section from the sidebar</div>
+    </main>
+  </div>
+
+  <script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+</body>
+</html>
+

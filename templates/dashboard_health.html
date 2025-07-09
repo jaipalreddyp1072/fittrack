@@ -1,0 +1,78 @@
+<h2>Health Parameters</h2>
+<div class="form-header" style="display: flex; justify-content: space-between; align-items: center;">
+  <button id="editHealthBtn">Edit</button>
+</div>
+
+<form id="healthForm">
+  <label>Diabetic?</label>
+  <select name="diabetic" id="diabetic" disabled>
+    <option value="no">No</option>
+    <option value="yes">Yes</option>
+  </select>
+
+  <div id="diabeticFields" style="display: none;">
+    <input type="number" name="pre_food" placeholder="Pre-Food Glucose" disabled>
+    <input type="number" name="post_food" placeholder="Post-Food Glucose" disabled>
+    <input type="number" name="hba1c" placeholder="HbA1c (%)" disabled>
+  </div>
+
+  <input type="number" name="testosterone" placeholder="Testosterone (ng/dL)" disabled>
+
+  <label>Fatty Liver?</label>
+  <select name="fatty_liver" id="fatty" disabled>
+    <option value="no">No</option>
+    <option value="yes">Yes</option>
+  </select>
+
+  <div id="liverStage" style="display: none;">
+    <label>Stage</label>
+    <select name="liver_stage" disabled>
+      <option value="1">Stage 1</option>
+      <option value="2">Stage 2</option>
+      <option value="3">Stage 3</option>
+    </select>
+  </div>
+
+  <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+    <button id="saveHealthBtn" type="submit">Save</button>
+  </div>
+</form>
+
+<div id="healthStatus"></div>
+
+<script>
+  const healthForm = document.getElementById("healthForm");
+  const editHealthBtn = document.getElementById("editHealthBtn");
+  const healthInputs = healthForm.querySelectorAll("input, select");
+
+  editHealthBtn.onclick = () => {
+    healthInputs.forEach(i => i.disabled = false);
+  };
+
+  document.getElementById("diabetic").onchange = function () {
+    const show = this.value === "yes";
+    document.getElementById("diabeticFields").style.display = show ? "block" : "none";
+  };
+
+  document.getElementById("fatty").onchange = function () {
+    const show = this.value === "yes";
+    document.getElementById("liverStage").style.display = show ? "block" : "none";
+  };
+
+  healthForm.onsubmit = async function (e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const data = Object.fromEntries(formData.entries());
+
+    const res = await fetch('/save/health', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    });
+
+    const result = await res.json();
+    document.getElementById("healthStatus").innerText = result.message || result.error;
+    healthInputs.forEach(i => i.disabled = true);
+  };
+</script>
+
